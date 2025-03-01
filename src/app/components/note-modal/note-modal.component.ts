@@ -5,8 +5,9 @@ import {
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
-  effect,
+  type OnInit,
   input,
   output,
   signal
@@ -34,16 +35,15 @@ import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-m
   ],
   templateUrl: './note-modal.component.html',
   styleUrls: ['./note-modal.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NoteModalComponent {
-  // Inputs and outputs
+export class NoteModalComponent implements OnInit {
   note = input.required<Note>();
   close = output<void>();
   save = output<Note>();
   delete = output<string>();
   pinToggled = output<Note>();
 
-  // Signals
   editedNote = signal<Note>({
     id: '',
     title: '',
@@ -59,47 +59,37 @@ export class NoteModalComponent {
   showDeleteConfirmation = signal(false);
   isDragDisabled = signal(false);
 
-  // Config
   colorConfig = colorConfig;
 
-  // Effect to initialize the edited note when the input note changes
-  ref = effect(() => {
+  ngOnInit(): void {
     this.editedNote.set({
       ...this.note(),
       checkListItems: this.note().checkListItems
         ? structuredClone(this.note().checkListItems)
         : [],
     });
-
-    const checkListItems = this.editedNote().checkListItems;
-    if (
-      this.editedNote().isCheckList &&
-      (!checkListItems || checkListItems.length === 0)
-    ) {
-      this.convertContentToChecklist();
-    }
-
     if (!this.editedNote().color) {
       this.updateEditedNote({ color: colorConfig.defaultColor });
     }
-  });
+  }
 
   updateEditedNote(changes: Partial<Note>): void {
-    this.editedNote.update(note => ({
-      ...note,
-      ...Object.fromEntries(Object.entries(changes).filter(([_, value]) => value !== undefined))
-    }));
+    this.editedNote.set({
+      ...this.editedNote(),
+      ...changes
+    });
   }
 
   updateChecklistItemText(index: number, text: string): void {
-    this.editedNote.update((note) => {
-      const items = [...(note.checkListItems || [])];
+    const items = [...(this.editedNote().checkListItems || [])];
 
-      if (index >= 0 && index < items.length) {
-        items[index] = { ...items[index], text };
-      }
+    if (index >= 0 && index < items.length) {
+      items[index] = { ...items[index], text };
+    }
 
-      return { ...note, checkListItems: items };
+    this.editedNote.set({
+      ...this.editedNote(),
+      checkListItems: items
     });
   }
 
@@ -282,7 +272,10 @@ export class NoteModalComponent {
         }
       }
 
-      this.updateEditedNote({ checkListItems: currentItems });
+      this.editedNote.set({
+        ...this.editedNote(),
+        checkListItems: currentItems
+      });
     }
   }
 
@@ -297,7 +290,10 @@ export class NoteModalComponent {
           level: item.level + 1,
         };
 
-        this.updateEditedNote({ checkListItems: currentItems });
+        this.editedNote.set({
+          ...this.editedNote(),
+          checkListItems: currentItems
+        });
       }
     }
   }
@@ -313,7 +309,10 @@ export class NoteModalComponent {
           level: item.level - 1,
         };
 
-        this.updateEditedNote({ checkListItems: currentItems });
+        this.editedNote.set({
+          ...this.editedNote(),
+          checkListItems: currentItems
+        });
       }
     }
   }
@@ -326,7 +325,10 @@ export class NoteModalComponent {
 
     if (event.previousIndex !== event.currentIndex) {
       moveItemInArray(currentItems, event.previousIndex, event.currentIndex);
-      this.updateEditedNote({ checkListItems: currentItems });
+      this.editedNote.set({
+        ...this.editedNote(),
+        checkListItems: currentItems
+      });
     }
   }
 

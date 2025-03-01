@@ -20,21 +20,16 @@ import type { ColorConfig } from '../../config/colors.type';
   styleUrls: ['./color-picker.component.css'],
 })
 export class ColorPickerComponent {
-  // Inputs and outputs
   selectedColor = input<string>(colorConfig.defaultColor);
   colorSelected = output<string>();
 
-  // ViewChild references
   @ViewChild('colorButton') colorButton!: ElementRef;
 
-  // Signals
   isMenuOpen = signal(false);
   menuPosition = signal({ top: '0px', left: '0px' });
 
-  // Config
   colorConfig: ColorConfig = colorConfig;
 
-  // Services
   private elementRef = inject(ElementRef);
 
   @HostListener('document:click', ['$event'])
@@ -60,9 +55,8 @@ export class ColorPickerComponent {
     const buttonElement = this.colorButton.nativeElement;
     const rect = buttonElement.getBoundingClientRect();
 
-    // Position the menu above the button
-    const menuTop = rect.top - 220; // Height of menu + some margin
-    const menuLeft = rect.left + rect.width / 2 - 100; // Center the menu (200px width / 2)
+    const menuTop = rect.top - 220;
+    const menuLeft = rect.left + rect.width / 2 - 100;
 
     // Adjust if menu would go off screen
     const adjustedLeft = Math.max(
@@ -85,10 +79,4 @@ export class ColorPickerComponent {
     this.isMenuOpen.set(false);
   }
 
-  getColorName(colorValue: string): string {
-    const color = this.colorConfig.colorOptions.find(
-      (c) => c.value === colorValue
-    );
-    return color ? color.name : 'Unknown';
-  }
 }

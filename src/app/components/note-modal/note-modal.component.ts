@@ -332,12 +332,6 @@ export class NoteModalComponent implements OnInit {
     }
   }
 
-  getColorName(colorValue: string): string {
-    const color = this.colorConfig.colorOptions.find(
-      (c) => c.value === colorValue
-    );
-    return color ? color.name : 'Unknown';
-  }
 
   handleItemFocus(): void {
     this.isDragDisabled.set(true);

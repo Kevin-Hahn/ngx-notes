@@ -15,14 +15,12 @@ import type { CheckListItem, Note } from '../../models/note.model';
   styleUrls: ['./note-card.component.css'],
 })
 export class NoteCardComponent {
-  // Inputs and outputs
   note = input.required<Note>();
   deleteNote = output<string>();
   editNote = output<Note>();
   togglePin = output<string>();
   checkboxToggled = output<{ note: Note; itemId: string }>();
 
-  // Config
   colorConfig = colorConfig;
 
   handleDelete(event: MouseEvent): void {
@@ -31,12 +29,10 @@ export class NoteCardComponent {
   }
 
   handleNoteClick(event: MouseEvent): void {
-    // Don't trigger note edit if a link was clicked
     if ((event.target as HTMLElement).tagName === 'A') {
       return;
     }
 
-    // Don't open edit view if the click was on a checkbox or its label
     const target = event.target as HTMLElement;
     if (
       target.closest('.checklist-checkbox') ||
@@ -51,7 +47,6 @@ export class NoteCardComponent {
   }
 
   handleLinkClick(event: MouseEvent): void {
-    // Stop propagation to prevent the note from being opened
     event.stopPropagation();
   }
 
@@ -66,10 +61,8 @@ export class NoteCardComponent {
   formatItemText(text: string): string {
     if (!text) return '';
 
-    // URL regex pattern
     const urlPattern = /(https?:\/\/[^\s]+)/g;
 
-    // Replace URLs with anchor tags
     return text.replace(urlPattern, (url) => {
       return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
     });
@@ -110,20 +103,15 @@ export class NoteCardComponent {
       return [];
     }
 
-    // Find all top-level items that are not checked
     const activeItems: CheckListItem[] = [];
 
-    // Process all items
     for (let i = 0; i < checkListItems.length; i++) {
       const item = checkListItems[i];
 
-      // If this is a top-level item (level 0)
       if (item.level === 0) {
-        // If it's not checked, add it and all its children
         if (!item.checked) {
           activeItems.push(item);
 
-          // Add all child items until we reach another top-level item
           let j = i + 1;
           while (j < checkListItems.length && checkListItems[j].level > 0) {
             activeItems.push(checkListItems[j]);
@@ -145,20 +133,15 @@ export class NoteCardComponent {
       return [];
     }
 
-    // Find all top-level items that are checked and their children
     const completedItems: CheckListItem[] = [];
 
-    // Process all items
     for (let i = 0; i < checkListItems.length; i++) {
       const item = checkListItems[i];
 
-      // If this is a top-level item (level 0)
       if (item.level === 0) {
-        // If it's checked, add it and all its children
         if (item.checked) {
           completedItems.push(item);
 
-          // Add all child items until we reach another top-level item
           let j = i + 1;
           while (j < checkListItems.length && checkListItems[j].level > 0) {
             completedItems.push(checkListItems[j]);

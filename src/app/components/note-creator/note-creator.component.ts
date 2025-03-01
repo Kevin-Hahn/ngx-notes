@@ -21,26 +21,21 @@ import { ColorPickerComponent } from '../color-picker/color-picker.component';
   styleUrls: ['./note-creator.component.css']
 })
 export class NoteCreatorComponent implements AfterViewInit {
-  // Outputs
   noteAdded = output<Note>();
 
-  // ViewChild references
   @ViewChild('noteInput') noteInput!: ElementRef;
   @ViewChild('noteTitleInput') noteTitleInput!: ElementRef;
   @ViewChild('noteContentInput') noteContentInput!: ElementRef;
 
-  // Signals
   isExpanded = signal(false);
   noteTitle = signal('');
   noteContent = signal('');
   selectedColor = signal(colorConfig.defaultColor);
   initialInputValue = signal('');
 
-  // Config
   colorConfig = colorConfig;
 
   constructor() {
-    // Effect to focus the appropriate input when expanded state changes
     effect(() => {
       if (this.isExpanded()) {
         setTimeout(() => {
@@ -59,7 +54,6 @@ export class NoteCreatorComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // Focus the note input field after view initialization
     setTimeout(() => {
       if (this.noteInput?.nativeElement) {
         this.noteInput.nativeElement.focus();
@@ -72,19 +66,15 @@ export class NoteCreatorComponent implements AfterViewInit {
   }
 
   handleInputKeyup(event: KeyboardEvent): void {
-    // Store the current input value
     if (this.noteInput?.nativeElement) {
       this.initialInputValue.set(this.noteInput.nativeElement.value);
     }
 
-    // If user starts typing, expand the form
     if (this.initialInputValue().trim() !== '') {
       this.isExpanded.set(true);
 
-      // Transfer the typed content to the content field
       this.noteContent.set(this.initialInputValue());
 
-      // Clear the initial input to avoid duplication
       setTimeout(() => {
         if (this.noteInput?.nativeElement) {
           this.noteInput.nativeElement.value = '';
@@ -94,7 +84,6 @@ export class NoteCreatorComponent implements AfterViewInit {
   }
 
   handleTitleInputKeydown(event: KeyboardEvent): void {
-    // When user presses Tab or Enter in the title field, move to the content field
     if (event.key === 'Tab' || event.key === 'Enter') {
       event.preventDefault();
       if (this.noteContentInput?.nativeElement) {
@@ -108,7 +97,6 @@ export class NoteCreatorComponent implements AfterViewInit {
   }
 
   saveNote(): void {
-    // Check if we have either title or content to save
     if (this.isExpanded() && (this.noteTitle().trim() || this.noteContent().trim())) {
       const now = new Date();
       const newNote: Note = {
@@ -123,7 +111,6 @@ export class NoteCreatorComponent implements AfterViewInit {
       this.noteAdded.emit(newNote);
       this.resetForm();
     } else {
-      // Nothing to save, just reset
       this.resetForm();
     }
   }

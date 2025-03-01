@@ -11,7 +11,8 @@ export class NoteService {
   private localStorageService = inject(LocalStorageService);
   private devNotesService = inject(DevNotesService);
 
-  notes = signal<Note[]>([]);
+  private readonly notesStore = signal<Note[]>([]);
+  readonly notes = computed(() => this.notesStore());
 
   // Computed signals for filtered notes
   readonly pinnedNotes = computed(() =>
@@ -40,12 +41,12 @@ export class NoteService {
         createdAt: new Date(note.createdAt),
         modifiedAt: note.modifiedAt ? new Date(note.modifiedAt) : undefined,
       }));
-      this.notes.set(processedNotes);
+      this.notesStore.set(processedNotes);
     } else if (isDevMode()) {
       // In development mode, if no notes exist, generate sample notes
       console.log('Development mode: Loading sample notes');
       const sampleNotes = this.devNotesService.generateSampleNotes();
-      this.notes.set(sampleNotes);
+      this.notesStore.set(sampleNotes);
       // Don't save sample notes to storage to avoid persisting them
     }
   }
@@ -62,7 +63,7 @@ export class NoteService {
    * @param note The note to add
    */
   addNote(note: Note): void {
-    this.notes.update((notes) => [note, ...notes]);
+    this.notesStore.update((notes) => [note, ...notes]);
     this.saveNotesToStorage();
   }
 
@@ -73,7 +74,7 @@ export class NoteService {
   updateNote(updatedNote: Note): void {
     updatedNote.modifiedAt = new Date();
 
-    this.notes.update((notes) => {
+    this.notesStore.update((notes) => {
       // Check if the pin status has changed
       const existingNote = notes.find((note) => note.id === updatedNote.id);
       const pinStatusChanged =
@@ -103,14 +104,14 @@ export class NoteService {
    * @param noteId The ID of the note to delete
    */
   deleteNote(noteId: string): void {
-    this.notes.update((notes) => notes.filter((note) => note.id !== noteId));
+    this.notesStore.update((notes) => notes.filter((note) => note.id !== noteId));
     this.saveNotesToStorage();
 
     // If all notes are deleted and we're in dev mode, reload sample notes
     if (this.notes().length === 0 && isDevMode()) {
       setTimeout(() => {
         const sampleNotes = this.devNotesService.generateSampleNotes();
-        this.notes.set(sampleNotes);
+        this.notesStore.set(sampleNotes);
         // Don't save sample notes to storage
       }, 500); // Small delay to show the empty state briefly
     }
@@ -121,7 +122,7 @@ export class NoteService {
    * @param noteId The ID of the note to toggle pin state
    */
   toggleNotePin(noteId: string): void {
-    this.notes.update((notes) => {
+    this.notesStore.update((notes) => {
       const noteIndex = notes.findIndex((note) => note.id === noteId);
 
       if (noteIndex === -1) return notes;
@@ -183,7 +184,7 @@ export class NoteService {
       return note;
     });
 
-    this.notes.set(updatedNotes);
+    this.notesStore.set(updatedNotes);
     this.saveNotesToStorage();
   }
 
@@ -200,7 +201,7 @@ export class NoteService {
    * Clear all notes (for testing purposes)
    */
   clearAllNotes(): void {
-    this.notes.set([]);
+    this.notesStore.set([]);
     this.saveNotesToStorage();
   }
 }

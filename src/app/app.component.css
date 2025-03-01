@@ -1,0 +1,26 @@
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  position: relative;
+}
+
+.app-title {
+  color: #e8eaed;
+  font-size: 28px;
+  font-weight: 400;
+  text-align: center;
+  margin: 20px 0;
+}
+
+/* Mobile optimization */
+@media (max-width: 600px) {
+  .app-container {
+    padding: 8px;
+  }
+  
+  .app-title {
+    font-size: 24px;
+    margin: 16px 0;
+  }
+}

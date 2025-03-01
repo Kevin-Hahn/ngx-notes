@@ -1,0 +1,69 @@
+<div class="notes-container">
+  <!-- Pinned notes section -->
+  @if (pinnedNotes().length > 0) {
+    <div class="section-header">
+      <h2 class="section-title">Pinned notes</h2>
+    </div>
+    <div 
+      cdkDropList
+      cdkDropListOrientation="mixed"
+      class="notes-grid"
+      (cdkDropListDropped)="dropPinned($event)"
+    >
+      @for (note of pinnedNotes(); track note.id) {
+        <div 
+          class="note-item" 
+          cdkDrag 
+          [cdkDragData]="note"
+        >
+          <app-note-card 
+            [note]="note" 
+            (deleteNote)="handleDeleteNote($event)"
+            (editNote)="handleEditNote($event)"
+            (togglePin)="handleTogglePin($event)"
+            (checkboxToggled)="handleCheckboxToggled($event)"
+          ></app-note-card>
+        </div>
+      }
+    </div>
+  }
+  
+  <!-- Other notes section -->
+  @if (unpinnedNotes().length > 0) {
+    <div class="section-header">
+      <h2 class="section-title">{{ pinnedNotes().length > 0 ? 'Other notes' : '' }}</h2>
+    </div>
+    <div 
+      cdkDropList
+      cdkDropListOrientation="mixed"
+      class="notes-grid"
+      (cdkDropListDropped)="dropUnpinned($event)"
+    >
+      @for (note of unpinnedNotes(); track note.id) {
+        <div 
+          class="note-item" 
+          cdkDrag 
+          [cdkDragData]="note"
+        >
+          <app-note-card 
+            [note]="note" 
+            (deleteNote)="handleDeleteNote($event)"
+            (editNote)="handleEditNote($event)"
+            (togglePin)="handleTogglePin($event)"
+            (checkboxToggled)="handleCheckboxToggled($event)"
+          ></app-note-card>
+        </div>
+      }
+    </div>
+  }
+</div>
+
+@if (selectedNote()) {
+  <app-note-modal
+    [note]="selectedNote()!"
+    (close)="closeModal()"
+    (save)="saveEditedNote($event)"
+    (delete)="handleDeleteNote($event)"
+    (pinToggled)="handlePinToggled($event)"
+  ></app-note-modal>
+}

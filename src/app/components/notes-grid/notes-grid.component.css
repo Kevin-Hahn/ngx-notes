@@ -1,0 +1,113 @@
+.notes-container {
+  margin-top: 32px;
+}
+
+.section-header {
+  margin-bottom: 16px;
+}
+
+.section-title {
+  color: #9aa0a6;
+  font-size: 11px;
+  font-weight: normal;
+  margin: 0;
+}
+
+/* Masonry-style grid layout */
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  width: 100%;
+  min-height: 50px;
+  padding: 4px;
+  grid-auto-flow: dense;
+  grid-auto-rows: min-content;
+}
+
+/* Responsive grid adjustments */
+@media (min-width: 600px) {
+  .notes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .notes-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .notes-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 1500px) {
+  .notes-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+@media (min-width: 1800px) {
+  .notes-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+/* Mobile optimization */
+@media (max-width: 600px) {
+  .notes-container {
+    margin-top: 16px;
+  }
+  
+  .notes-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 0;
+  }
+  
+  .section-header {
+    margin-bottom: 8px;
+    padding-left: 4px;
+  }
+}
+
+.note-item {
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: grab;
+  width: 100%;
+  height: fit-content;
+}
+
+.note-item:hover .note-card {
+  border: 2px solid #ffffff !important;
+}
+
+.note-item:active {
+  cursor: grabbing;
+}
+
+/* For drag and drop functionality */
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 8px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+              0 8px 10px 1px rgba(0, 0, 0, 0.14),
+              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  z-index: 1000;
+}
+
+.cdk-drag-preview .note-card {
+  border: 2px solid #ffffff !important;
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}

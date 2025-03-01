@@ -1,0 +1,45 @@
+<div class="note-creator">
+  <div class="note-input-container" 
+       [class.expanded]="isExpanded()" 
+       [style.background-color]="selectedColor()"
+       [class.default-color]="selectedColor() === colorConfig.defaultColor">
+    @if (!isExpanded()) {
+      <input
+        #noteInput
+        type="text"
+        placeholder="Take a note..."
+        (click)="expandInput()"
+        (keyup)="handleInputKeyup($event)"
+        class="note-input"
+      />
+    }
+    @if (isExpanded()) {
+      <div class="expanded-note">
+        <input
+          #noteTitleInput
+          type="text"
+          placeholder="Title"
+          [ngModel]="noteTitle()"
+          (ngModelChange)="noteTitle.set($event)"
+          class="note-title-input"
+          (keydown)="handleTitleInputKeydown($event)"
+        />
+        <textarea
+          #noteContentInput
+          placeholder="Take a note..."
+          [ngModel]="noteContent()"
+          (ngModelChange)="noteContent.set($event)"
+          class="note-content-input"
+          rows="3"
+        ></textarea>
+        <div class="note-actions">
+          <app-color-picker 
+            [selectedColor]="selectedColor()" 
+            (colorSelected)="handleColorSelected($event)"
+          ></app-color-picker>
+          <button class="close-button" (click)="saveNote()" matTooltip="Save note">Close</button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

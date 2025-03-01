@@ -1,0 +1,89 @@
+.color-picker-container {
+  position: relative;
+}
+
+.icon-button {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  color: #9aa0a6;
+  border: none;
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+  position: relative;
+}
+
+.icon-button:hover {
+  background-color: rgba(154, 160, 166, 0.1);
+  color: #e8eaed;
+}
+
+.icon-button .material-icons {
+  font-size: 20px;
+}
+
+.color-menu {
+  position: fixed;
+  z-index: 1300; /* Higher than modal but lower than tooltips */
+  background-color: #2d2e31;
+  border: 1px solid #5f6368;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  width: 200px;
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.color-menu-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid #5f6368;
+  color: #e8eaed;
+  font-size: 14px;
+}
+
+.color-options-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  padding: 12px;
+}
+
+.color-option {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s;
+  border: 1px solid #5f6368;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.color-option:hover {
+  transform: scale(1.1);
+}
+
+.color-option.selected {
+  box-shadow: 0 0 0 2px #fff;
+}
+
+.check-icon {
+  color: #fff;
+  font-size: 16px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+  .color-menu {
+    width: 240px;
+  }
+}

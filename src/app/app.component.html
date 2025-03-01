@@ -1,0 +1,11 @@
+<div class="app-container">
+  <h1 class="app-title">Notes App</h1>
+  <app-note-creator (noteAdded)="addNote($event)"></app-note-creator>
+  <app-notes-grid
+    (notesChanged)="updateNotes($event)"
+    (noteDeleted)="deleteNote($event)"
+    (noteUpdated)="updateNote($event)"
+    (notePinToggled)="toggleNotePin($event)"
+  ></app-notes-grid>
+  <app-dev-menu></app-dev-menu>
+</div>

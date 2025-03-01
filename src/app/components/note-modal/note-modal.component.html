@@ -1,0 +1,167 @@
+<div class="modal-backdrop" (click)="closeModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-content" 
+         [style.background-color]="editedNote().color || colorConfig.defaultColor"
+         [class.default-color]="!editedNote().color || editedNote().color === colorConfig.defaultColor">
+      <div class="modal-header">
+        <div class="title-container">
+          <input
+            type="text"
+            placeholder="Title"
+            [ngModel]="editedNote().title"
+            (ngModelChange)="updateEditedNote({title: $event})"
+            class="note-title-input"
+          />
+        </div>
+        <button 
+          class="pin-button" 
+          (click)="togglePin()" 
+          [class.pinned]="editedNote().isPinned"
+          [matTooltip]="editedNote().isPinned ? 'Unpin' : 'Pin'"
+          matTooltipPosition="above"
+        >
+          <span class="material-icons">push_pin</span>
+        </button>
+      </div>
+      
+      <!-- Regular note content -->
+      @if (!editedNote().isCheckList) {
+        <div>
+          <textarea
+            placeholder="Take a note..."
+            [ngModel]="editedNote().content"
+            (ngModelChange)="updateEditedNote({content: $event})"
+            class="note-content-input"
+            rows="6"
+          ></textarea>
+        </div>
+      }
+      
+      <!-- Checklist content -->
+      @if (editedNote().isCheckList) {
+        <div class="checklist-editor">
+          <div 
+            cdkDropList 
+            (cdkDropListDropped)="dropChecklistItem($event)"
+            class="checklist-items-container"
+          >
+            @for (item of editedNote().checkListItems || []; track item.id; let i = $index) {
+              <div 
+                cdkDrag
+                cdkDragLockAxis="y"
+                [cdkDragDisabled]="isDragDisabled()"
+                class="checklist-item-row"
+              >
+                <div class="checklist-item-content" [style.marginLeft.px]="item.level * 20">
+                  <div class="drag-handle" cdkDragHandle matTooltip="Drag to reorder" matTooltipPosition="above">
+                    <span class="material-icons">drag_indicator</span>
+                  </div>
+                  <mat-checkbox 
+                    [checked]="item.checked" 
+                    (change)="toggleCheckbox(item)" 
+                    color="primary" 
+                    class="checklist-checkbox">
+                  </mat-checkbox>
+                  <input 
+                    type="text" 
+                    [ngModel]="item.text" 
+                    (ngModelChange)="updateChecklistItemText(i, $event)"
+                    class="item-text-input"
+                    placeholder="List item"
+                    (focus)="handleItemFocus()"
+                    (blur)="handleItemBlur()"
+                  />
+                  <div class="item-actions">
+                    @if (item.level < 3) {
+                      <button 
+                        class="indent-button" 
+                        (click)="indentItem(i)"
+                        matTooltip="Indent"
+                        matTooltipPosition="above"
+                      >
+                        <span class="material-icons">keyboard_arrow_right</span>
+                      </button>
+                    }
+                    @if (item.level > 0) {
+                      <button 
+                        class="outdent-button" 
+                        (click)="outdentItem(i)"
+                        matTooltip="Outdent"
+                        matTooltipPosition="above"
+                      >
+                        <span class="material-icons">keyboard_arrow_left</span>
+                      </button>
+                    }
+                    <button 
+                      class="delete-item-button" 
+                      (click)="deleteChecklistItem(i)"
+                      matTooltip="Delete item"
+                      matTooltipPosition="above"
+                    >
+                      <span class="material-icons">close</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+          
+          <div class="new-item-container">
+            <input 
+              type="text" 
+              [ngModel]="newItemText()" 
+              (ngModelChange)="newItemText.set($event)" 
+              placeholder="Add item..." 
+              class="new-item-input"
+              (keyup.enter)="addChecklistItem()"
+            />
+            <button class="add-item-button" (click)="addChecklistItem()" matTooltip="Add item" matTooltipPosition="above">
+              <span class="material-icons">add</span>
+            </button>
+          </div>
+        </div>
+      }
+      
+      <div class="modal-actions">
+        <div class="action-buttons">
+          <button 
+            class="icon-button" 
+            (click)="toggleChecklistMode()" 
+            [matTooltip]="editedNote().isCheckList ? 'Switch to Text' : 'Switch to Checklist'"
+            matTooltipPosition="above"
+          >
+            <span class="material-icons">{{ editedNote().isCheckList ? 'subject' : 'check_box' }}</span>
+          </button>
+          
+          <app-color-picker 
+            [selectedColor]="editedNote().color || colorConfig.defaultColor" 
+            (colorSelected)="handleColorSelected($event)"
+          ></app-color-picker>
+          
+          <button class="icon-button" (click)="deleteNote()" matTooltip="Delete Note" matTooltipPosition="above">
+            <span class="material-icons">delete</span>
+          </button>
+        </div>
+        
+        <div class="save-section">
+          @if (editedNote().modifiedAt) {
+            <div class="last-modified">
+              Last modified: {{ editedNote().modifiedAt | dateFormat:'full' }}
+            </div>
+          }
+          <button class="save-button" (click)="saveChanges()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+@if (showDeleteConfirmation()) {
+  <app-confirmation-modal
+    title="Delete Note"
+    message="Are you sure you want to delete this note? This action cannot be undone."
+    (confirm)="confirmDelete()"
+    (cancel)="cancelDelete()"
+  ></app-confirmation-modal>
+}

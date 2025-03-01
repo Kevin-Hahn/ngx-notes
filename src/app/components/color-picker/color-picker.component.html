@@ -1,0 +1,29 @@
+<div class="color-picker-container">
+  <button #colorButton class="icon-button" (click)="toggleMenu($event)" matTooltip="Change color">
+    <span class="material-icons">palette</span>
+  </button>
+  
+  @if (isMenuOpen()) {
+    <div class="color-menu" [style.top]="menuPosition().top" [style.left]="menuPosition().left">
+      <div class="color-menu-header">
+        <span>Note color</span>
+      </div>
+      <div class="color-options-grid">
+        @for (color of colorConfig.colorOptions; track color.id) {
+          <div 
+            class="color-option" 
+            [style.background-color]="color.value"
+            [class.selected]="selectedColor() === color.value"
+            (click)="selectColor(color.value, $event)"
+            [matTooltip]="color.name"
+            matTooltipPosition="above"
+          >
+            @if (selectedColor() === color.value) {
+              <span class="material-icons check-icon">check</span>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

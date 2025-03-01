@@ -1,0 +1,21 @@
+@if (isDevMode) {
+  <div class="dev-menu-container">
+    <button class="dev-menu-button" (click)="toggleMenu()" title="Development Menu">
+      <span class="material-icons">developer_mode</span>
+    </button>
+    
+    @if (isMenuOpen) {
+      <div class="dev-menu-dropdown">
+        <div class="dev-menu-header">Development Tools</div>
+        <button class="dev-menu-item" (click)="addSampleNotes()">
+          <span class="material-icons">note_add</span>
+          Add Sample Notes
+        </button>
+        <button class="dev-menu-item" (click)="clearAllNotes()">
+          <span class="material-icons">delete_sweep</span>
+          Clear All Notes
+        </button>
+      </div>
+    }
+  </div>
+}

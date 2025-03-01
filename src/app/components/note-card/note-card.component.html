@@ -1,0 +1,72 @@
+<div
+  class="note-card"
+  [style.background-color]="note().color || colorConfig.defaultColor"
+  [class.default-color]="
+    !note().color || note().color === colorConfig.defaultColor
+  "
+  (click)="handleNoteClick($event)"
+>
+  <div class="note-header">
+    <div class="title-container">
+      @if (note().title) {
+      <h3 class="note-title">{{ note().title }}</h3>
+      }
+    </div>
+  </div>
+
+  <div class="note-content">
+    @if (!note().isCheckList) {
+    <div class="note-text">{{ note().content }}</div>
+    } @if (note().isCheckList && note().checkListItems) {
+    <div class="checklist-container">
+      <!-- Active items -->
+      @for (item of getActiveItems(); track item.id) {
+      <div class="checklist-item" [style.marginLeft.px]="item.level * 20">
+        <div class="checklist-row">
+          <mat-checkbox
+            [checked]="item.checked"
+            (change)="toggleCheckbox(item, $event)"
+            (click)="$event.stopPropagation()"
+            color="primary"
+            class="checklist-checkbox"
+          >
+          </mat-checkbox>
+          <span
+            class="checklist-text"
+            [class.checked]="item.checked"
+            [innerHTML]="formatItemText(item.text)"
+            (click)="handleLinkClick($event)"
+          ></span>
+        </div>
+      </div>
+      }
+
+      <!-- Completed items section -->
+      @if (getCompletedItems().length > 0) {
+      <div class="completed-items-section">
+        <div class="completed-header">Completed</div>
+        @for (item of getCompletedItems(); track item.id) {
+        <div class="checklist-item" [style.marginLeft.px]="item.level * 20">
+          <div class="checklist-row">
+            <mat-checkbox
+              [checked]="item.checked"
+              (change)="toggleCheckbox(item, $event)"
+              (click)="$event.stopPropagation()"
+              color="primary"
+              class="checklist-checkbox"
+            >
+            </mat-checkbox>
+            <span
+              class="checklist-text checked"
+              [innerHTML]="formatItemText(item.text)"
+              (click)="handleLinkClick($event)"
+            ></span>
+          </div>
+        </div>
+        }
+      </div>
+      }
+    </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,101 @@
+.note-creator {
+  max-width: 600px;
+  margin: 32px auto;
+}
+
+.note-input-container {
+  background-color: #202124;
+  border-radius: 8px;
+  padding: 10px 15px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.note-input-container.default-color {
+  border: 1px solid #48494b;
+}
+
+.note-input-container.expanded {
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+.note-input {
+  width: 100%;
+  padding: 10px 0;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 16px;
+  outline: none;
+}
+
+.expanded-note {
+  display: flex;
+  flex-direction: column;
+}
+
+.note-title-input {
+  width: 100%;
+  padding: 10px 0;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 500;
+  outline: none;
+}
+
+.note-content-input {
+  width: 100%;
+  padding: 10px 0;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 16px;
+  resize: none;
+  outline: none;
+  min-height: 60px;
+}
+
+.note-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.close-button {
+  background-color: transparent;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.close-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Mobile optimization */
+@media (max-width: 600px) {
+  .note-creator {
+    margin: 16px auto;
+  }
+}
+
+/* Placeholder color customization */
+::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+  opacity: 1;
+}
+
+:-ms-input-placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+::-ms-input-placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}

@@ -1,0 +1,16 @@
+{
+  "defaultColor": "#202124",
+  "colorOptions": [
+    { "id": "default", "value": "#202124", "name": "Anthrazit" },
+    { "id": "darkblue", "value": "#284255", "name": "Dark Blue" },
+    { "id": "red", "value": "#5c2b29", "name": "Red" },
+    { "id": "orange", "value": "#614a19", "name": "Orange" },
+    { "id": "yellow", "value": "#635d19", "name": "Yellow" },
+    { "id": "green", "value": "#345920", "name": "Green" },
+    { "id": "teal", "value": "#16504b", "name": "Teal" },
+    { "id": "blue", "value": "#2d555e", "name": "Blue" },
+    { "id": "purple", "value": "#42275e", "name": "Purple" },
+    { "id": "pink", "value": "#5b2245", "name": "Pink" },
+    { "id": "gray", "value": "#3c3f43", "name": "Gray" }
+  ]
+}

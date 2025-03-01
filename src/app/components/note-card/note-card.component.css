@@ -1,0 +1,150 @@
+.note-card {
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3);
+  transition: box-shadow 0.3s ease, border 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+  pointer-events: auto;
+  border: 2px solid transparent;
+}
+
+.note-card.default-color {
+  border: 1px solid #5f6368;
+}
+
+.note-card:hover {
+  box-shadow: 0 2px 6px 0 rgba(0,0,0,0.3);
+}
+
+.note-header {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.note-title {
+  color: #e8eaed;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.note-content {
+  width: 100%;
+}
+
+.note-text {
+  color: #e8eaed;
+  font-size: 14px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.checklist-container {
+  margin-top: 4px;
+}
+
+.checklist-item {
+  margin-bottom: -5px;
+}
+
+.checklist-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.checklist-checkbox {
+  margin-right: 8px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+  margin-top: 0;
+}
+
+.checklist-text {
+  color: #e8eaed;
+  font-size: 14px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+}
+
+.checklist-text.checked {
+  text-decoration: line-through;
+  color: #9aa0a6;
+}
+
+.checklist-text a {
+  color: #e8eaed;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.checklist-text a:hover {
+  text-decoration: underline;
+  color: #ffffff;
+}
+
+.checklist-text.checked a {
+  color: #9aa0a6;
+  text-decoration: line-through underline;
+}
+
+.completed-items-section {
+  margin-top: 16px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(154, 160, 166, 0.3);
+}
+
+.completed-header {
+  font-size: 11px;
+  color: #9aa0a6;
+  margin-bottom: 8px;
+  font-weight: normal;
+}
+
+.note-modified {
+  margin-top: 12px;
+  font-size: 11px;
+  color: #9aa0a6;
+  text-align: right;
+}
+
+/* Mobile optimization */
+@media (max-width: 600px) {
+  .note-card {
+    margin-bottom: 0;
+    padding: 14px;
+  }
+}
+
+/* Angular Material Checkbox Customization */
+::ng-deep .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background {
+  background-color: #8ab4f8 !important;
+  border-color: #8ab4f8 !important;
+}
+
+::ng-deep .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background {
+  border-color: #9aa0a6 !important;
+}
+
+::ng-deep .mat-mdc-checkbox .mdc-form-field {
+  color: #e8eaed !important;
+}

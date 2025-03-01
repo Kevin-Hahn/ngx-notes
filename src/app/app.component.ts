@@ -1,10 +1,10 @@
-import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Note } from './models/note.model';
+import { Component, inject } from '@angular/core';
+import { DevMenuComponent } from './components/dev-menu/dev-menu.component';
 import { NoteCreatorComponent } from './components/note-creator/note-creator.component';
 import { NotesGridComponent } from './components/notes-grid/notes-grid.component';
+import type { Note } from './models/note.model';
 import { NoteService } from './services/note.service';
-import { DevMenuComponent } from './components/dev-menu/dev-menu.component';
 
 @Component({
   selector: 'app-root',

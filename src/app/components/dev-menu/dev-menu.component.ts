@@ -1,7 +1,7 @@
-import { Component, inject, isDevMode } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NoteService } from '../../services/note.service';
+import { Component, inject, isDevMode } from '@angular/core';
 import { DevNotesService } from '../../services/dev-notes.service';
+import { NoteService } from '../../services/note.service';
 
 @Component({
   selector: 'app-dev-menu',
@@ -13,25 +13,24 @@ import { DevNotesService } from '../../services/dev-notes.service';
 export class DevMenuComponent {
   isDevMode = isDevMode();
   isMenuOpen = false;
-  
+
   private noteService = inject(NoteService);
   private devNotesService = inject(DevNotesService);
-  
+
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
   }
-  
+
   addSampleNotes(): void {
     const sampleNotes = this.devNotesService.generateSampleNotes();
-    
-    // Add each sample note to the service
-    sampleNotes.forEach(note => {
+
+    for (const note of sampleNotes) {
       this.noteService.addNote(note);
-    });
-    
+    }
+
     this.isMenuOpen = false;
   }
-  
+
   clearAllNotes(): void {
     this.noteService.clearAllNotes();
     this.isMenuOpen = false;

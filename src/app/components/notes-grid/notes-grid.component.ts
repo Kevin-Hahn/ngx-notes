@@ -1,24 +1,22 @@
 import {
-  Component,
-  input,
-  output,
-  inject,
-  signal,
-  computed,
-  effect,
-  OnInit,
-  HostListener,
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {
-  CdkDragDrop,
+  type CdkDragDrop,
   DragDropModule,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import { Note } from '../../models/note.model';
+import { CommonModule } from '@angular/common';
+import {
+  Component,
+  HostListener,
+  type OnInit,
+  computed,
+  inject,
+  output,
+  signal
+} from '@angular/core';
+import type { Note } from '../../models/note.model';
+import { NoteService } from '../../services/note.service';
 import { NoteCardComponent } from '../note-card/note-card.component';
 import { NoteModalComponent } from '../note-modal/note-modal.component';
-import { NoteService } from '../../services/note.service';
 
 @Component({
   selector: 'app-notes-grid',

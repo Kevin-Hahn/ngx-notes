@@ -1,12 +1,12 @@
-import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, input, output } from '@angular/core';
 import {
+  type MatCheckboxChange,
   MatCheckboxModule,
-  MatCheckboxChange,
 } from '@angular/material/checkbox';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Note, CheckListItem } from '../../models/note.model';
 import colorConfig from '../../config/colors.json';
+import type { CheckListItem, Note } from '../../models/note.model';
 
 @Component({
   selector: 'app-note-card',
@@ -79,46 +79,24 @@ export class NoteCardComponent {
    * Toggle checkbox state directly from the grid card
    */
   toggleCheckbox(item: CheckListItem, event: MatCheckboxChange): void {
-    // Create a deep copy of the note to avoid modifying the original directly
-    const updatedNote = {
-      ...this.note(),
-      checkListItems: this.note().checkListItems
-        ? structuredClone(this.note().checkListItems)
-        : [],
-    };
+    const currentNote = this.note();
+    const clonedItems = currentNote.checkListItems ? structuredClone(currentNote.checkListItems) : [];
+    const updatedNote = { ...currentNote, checkListItems: clonedItems };
 
-    // Find the item in the copied array and toggle its state
-    const itemIndex = updatedNote.checkListItems!.findIndex(
-      (i) => i.id === item.id
-    );
+    const itemIndex = clonedItems.findIndex(i => i.id === item.id);
     if (itemIndex !== -1) {
-      updatedNote.checkListItems![itemIndex] = {
-        ...updatedNote.checkListItems![itemIndex],
-        checked: event.checked,
-      };
+      clonedItems[itemIndex] = { ...clonedItems[itemIndex], checked: event.checked };
 
-      // If this is a top-level item (level 0), we need to handle its children
-      if (updatedNote.checkListItems![itemIndex].level === 0) {
-        const newCheckedState = updatedNote.checkListItems![itemIndex].checked;
-
-        // Find all child items and set their checked state to match the parent
+      if (clonedItems[itemIndex].level === 0) {
+        const newCheckedState = clonedItems[itemIndex].checked;
         let i = itemIndex + 1;
-        while (
-          i < updatedNote.checkListItems!.length &&
-          updatedNote.checkListItems![i].level > 0
-        ) {
-          updatedNote.checkListItems![i] = {
-            ...updatedNote.checkListItems![i],
-            checked: newCheckedState,
-          };
+        while (i < clonedItems.length && clonedItems[i].level > 0) {
+          clonedItems[i] = { ...clonedItems[i], checked: newCheckedState };
           i++;
         }
       }
 
-      // Update the note's modified timestamp
       updatedNote.modifiedAt = new Date();
-
-      // Emit the updated note without opening the edit view
       this.checkboxToggled.emit({ note: updatedNote, itemId: item.id });
     }
   }

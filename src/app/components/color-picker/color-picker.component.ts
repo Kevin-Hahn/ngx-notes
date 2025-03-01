@@ -1,17 +1,17 @@
+import { CommonModule } from '@angular/common';
 import {
   Component,
-  input,
-  output,
   ElementRef,
   HostListener,
   ViewChild,
   inject,
+  input,
+  output,
   signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import colorConfig from '../../config/colors.json';
-import { ColorConfig } from '../../config/colors.type';
+import type { ColorConfig } from '../../config/colors.type';
 
 @Component({
   selector: 'app-color-picker',

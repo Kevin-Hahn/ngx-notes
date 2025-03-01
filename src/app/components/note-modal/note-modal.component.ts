@@ -1,26 +1,24 @@
 import {
-  Component,
-  input,
-  output,
-  signal,
-  computed,
-  effect,
-  inject,
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import {
-  CdkDragDrop,
+  type CdkDragDrop,
   DragDropModule,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
+import { CommonModule } from '@angular/common';
+import {
+  Component,
+  effect,
+  input,
+  output,
+  signal
+} from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Note, CheckListItem } from '../../models/note.model';
+import colorConfig from '../../config/colors.json';
+import type { CheckListItem, Note } from '../../models/note.model';
 import { DateFormatPipe } from '../../pipes/date-format.pipe';
 import { ColorPickerComponent } from '../color-picker/color-picker.component';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
-import colorConfig from '../../config/colors.json';
 
 @Component({
   selector: 'app-note-modal',
@@ -87,31 +85,20 @@ export class NoteModalComponent {
   });
 
   updateEditedNote(changes: Partial<Note>): void {
-    this.editedNote.update((note) => {
-      const updatedNote = { ...note };
-      
-      if (changes.id !== undefined) updatedNote.id = changes.id;
-      if (changes.title !== undefined) updatedNote.title = changes.title;
-      if (changes.content !== undefined) updatedNote.content = changes.content;
-      if (changes.createdAt !== undefined) updatedNote.createdAt = changes.createdAt;
-      if (changes.modifiedAt !== undefined) updatedNote.modifiedAt = changes.modifiedAt;
-      if (changes.isCheckList !== undefined) updatedNote.isCheckList = changes.isCheckList;
-      if (changes.checkListItems !== undefined) updatedNote.checkListItems = changes.checkListItems;
-      if (changes.color !== undefined) updatedNote.color = changes.color;
-      if (changes.isPinned !== undefined) updatedNote.isPinned = changes.isPinned;
-      
-      return updatedNote;
-    });
+    this.editedNote.update(note => ({
+      ...note,
+      ...Object.fromEntries(Object.entries(changes).filter(([_, value]) => value !== undefined))
+    }));
   }
 
   updateChecklistItemText(index: number, text: string): void {
     this.editedNote.update((note) => {
       const items = [...(note.checkListItems || [])];
-      
+
       if (index >= 0 && index < items.length) {
         items[index] = { ...items[index], text };
       }
-      
+
       return { ...note, checkListItems: items };
     });
   }
@@ -160,18 +147,18 @@ export class NoteModalComponent {
 
   toggleChecklistMode(): void {
     const currentNote = this.editedNote();
-    
+
     if (currentNote.isCheckList) {
       this.convertChecklistToContent();
       this.updateEditedNote({ isCheckList: false });
     } else {
       const items = this.parseTextToChecklistItems(currentNote.content);
-      
-      this.updateEditedNote({ 
+
+      this.updateEditedNote({
         isCheckList: true,
         checkListItems: items
       });
-      
+
       if (items.length === 0) {
         this.addEmptyChecklistItem();
       }
@@ -201,7 +188,7 @@ export class NoteModalComponent {
       checked: false,
       level: 0,
     };
-    
+
     const currentItems = this.editedNote().checkListItems || [];
     this.updateEditedNote({
       checkListItems: [...currentItems, emptyItem]

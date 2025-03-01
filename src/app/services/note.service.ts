@@ -1,7 +1,7 @@
-import { Injectable, inject, isDevMode, signal, computed } from '@angular/core';
-import { Note } from '../models/note.model';
-import { LocalStorageService } from './local-storage.service';
+import { Injectable, computed, inject, isDevMode, signal } from '@angular/core';
+import type { Note } from '../models/note.model';
 import { DevNotesService } from './dev-notes.service';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -79,7 +79,7 @@ export class NoteService {
       const pinStatusChanged =
         existingNote && existingNote.isPinned !== updatedNote.isPinned;
 
-      let updatedNotes;
+      let updatedNotes: Note[];
 
       if (pinStatusChanged && updatedNote.isPinned) {
         // If the note was just pinned, move it to the beginning of the array

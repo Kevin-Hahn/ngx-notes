@@ -64,6 +64,34 @@
   padding: 8px 0;
 }
 
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.icon-button {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  color: #9aa0a6;
+  border: none;
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+  position: relative;
+}
+
+.icon-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.icon-button .material-icons {
+  font-size: 20px;
+}
+
 .close-button {
   background-color: transparent;
   color: #ffffff;
@@ -77,6 +105,110 @@
 
 .close-button:hover {
   background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Checklist styles */
+.checklist-container {
+  margin-top: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.checklist-item-row {
+  margin-bottom: 8px;
+}
+
+.checklist-item-content {
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.checklist-checkbox {
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.item-text-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 14px;
+  outline: none;
+  padding: 4px 0;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.item-actions {
+  display: flex;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+
+.checklist-item-row:hover .item-actions {
+  opacity: 1;
+}
+
+.delete-item-button {
+  background: transparent;
+  border: none;
+  color: #9aa0a6;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 50%;
+  margin-left: 4px;
+}
+
+.delete-item-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.new-item-container {
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+  padding: 8px 0;
+}
+
+.new-item-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 14px;
+  outline: none;
+  padding: 4px 0;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.add-item-button {
+  background: transparent;
+  border: none;
+  color: #9aa0a6;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.add-item-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
 }
 
 /* Mobile optimization */
@@ -98,4 +230,18 @@
 
 ::-ms-input-placeholder {
   color: rgba(255, 255, 255, 0.7);
+}
+
+/* Angular Material Checkbox Customization */
+::ng-deep .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background {
+  background-color: #8ab4f8 !important;
+  border-color: #8ab4f8 !important;
+}
+
+::ng-deep .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background {
+  border-color: #9aa0a6 !important;
+}
+
+::ng-deep .mat-mdc-checkbox .mdc-form-field {
+  color: #ffffff !important;
 }

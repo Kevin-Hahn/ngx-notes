@@ -24,19 +24,78 @@
           class="note-title-input"
           (keydown)="handleTitleInputKeydown($event)"
         />
-        <textarea
-          #noteContentInput
-          placeholder="Take a note..."
-          [ngModel]="noteContent()"
-          (ngModelChange)="noteContent.set($event)"
-          class="note-content-input"
-          rows="3"
-        ></textarea>
+        @if (!isCheckList()) {
+          <textarea
+            #noteContentInput
+            placeholder="Take a note..."
+            [ngModel]="noteContent()"
+            (ngModelChange)="noteContent.set($event)"
+            class="note-content-input"
+            rows="3"
+          ></textarea>
+        }
+        @if (isCheckList()) {
+          <div class="checklist-container">
+            @for (item of checkListItems(); track item.id) {
+              <div class="checklist-item-row" [style.marginLeft.px]="item.level * 20">
+                <div class="checklist-item-content">
+                  <mat-checkbox 
+                    [checked]="item.checked" 
+                    (change)="toggleCheckbox(item, $event)" 
+                    color="primary" 
+                    class="checklist-checkbox">
+                  </mat-checkbox>
+                  <input 
+                    type="text" 
+                    [ngModel]="item.text" 
+                    (ngModelChange)="updateChecklistItemText(item.id, $event)"
+                    class="item-text-input"
+                    placeholder="List item"
+                  />
+                  <div class="item-actions">
+                    <button 
+                      class="delete-item-button" 
+                      (click)="deleteChecklistItem(item.id)"
+                      matTooltip="Delete item"
+                      matTooltipPosition="above"
+                    >
+                      <span class="material-icons">close</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            }
+            
+            <div class="new-item-container">
+              <input 
+                type="text" 
+                [ngModel]="newItemText()" 
+                (ngModelChange)="newItemText.set($event)" 
+                placeholder="Add item..." 
+                class="new-item-input"
+                (keyup.enter)="addChecklistItem()"
+              />
+              <button class="add-item-button" (click)="addChecklistItem()" matTooltip="Add item" matTooltipPosition="above">
+                <span class="material-icons">add</span>
+              </button>
+            </div>
+          </div>
+        }
         <div class="note-actions">
-          <app-color-picker 
-            [selectedColor]="selectedColor()" 
-            (colorSelected)="handleColorSelected($event)"
-          ></app-color-picker>
+          <div class="action-buttons">
+            <button 
+              class="icon-button" 
+              (click)="toggleChecklistMode()" 
+              [matTooltip]="isCheckList() ? 'Switch to Text' : 'Switch to Checklist'"
+              matTooltipPosition="above"
+            >
+              <span class="material-icons">{{ isCheckList() ? 'subject' : 'check_box' }}</span>
+            </button>
+            <app-color-picker 
+              [selectedColor]="selectedColor()" 
+              (colorSelected)="handleColorSelected($event)"
+            ></app-color-picker>
+          </div>
           <button class="close-button" (click)="saveNote()" matTooltip="Save note">Close</button>
         </div>
       </div>

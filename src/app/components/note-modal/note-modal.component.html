@@ -51,8 +51,16 @@
                 cdkDragLockAxis="y"
                 [cdkDragDisabled]="isDragDisabled()"
                 class="checklist-item-row"
+                (cdkDragStarted)="startDrag(item)"
+                (cdkDragEnded)="endDrag()"
+                [class.is-dragging]="draggedItemId() === item.id"
               >
-                <div class="checklist-item-content" [style.marginLeft.px]="item.level * 20">
+                <div 
+                  class="checklist-item-content" 
+                  [style.marginLeft.px]="getVisualIndentationLevel(item) * 20"
+                  [class.potential-drop-target]="draggedItemId() !== null && draggedItemId() !== item.id"
+                  (dragover)="dragOver($event, item)"
+                >
                   <div class="drag-handle" cdkDragHandle matTooltip="Drag to reorder" matTooltipPosition="above">
                     <span class="material-icons">drag_indicator</span>
                   </div>

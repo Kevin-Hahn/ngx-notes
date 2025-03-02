@@ -58,6 +58,10 @@ export class NoteModalComponent implements OnInit {
   newItemText = signal('');
   showDeleteConfirmation = signal(false);
   isDragDisabled = signal(false);
+  
+  // Track the item being dragged and its potential parent
+  draggedItemId = signal<string | null>(null);
+  potentialParentLevel = signal<number | null>(null);
 
   colorConfig = colorConfig;
 
@@ -317,6 +321,36 @@ export class NoteModalComponent implements OnInit {
     }
   }
 
+  // Start drag tracking
+  startDrag(item: CheckListItem): void {
+    this.draggedItemId.set(item.id);
+  }
+
+  // Handle drag over another item to show potential indentation
+  dragOver(event: DragEvent, overItem: CheckListItem): void {
+    event.preventDefault();
+    
+    if (this.draggedItemId() && this.draggedItemId() !== overItem.id) {
+      // Set the potential parent level for visual feedback
+      this.potentialParentLevel.set(overItem.level);
+    }
+  }
+
+  // Reset drag tracking when drag ends
+  endDrag(): void {
+    this.draggedItemId.set(null);
+    this.potentialParentLevel.set(null);
+  }
+
+  // Get the visual indentation level for an item during drag
+  getVisualIndentationLevel(item: CheckListItem): number {
+    if (this.draggedItemId() === item.id && this.potentialParentLevel()  !== null) {
+      // Calculate the appropriate indentation level based on the potential parent
+      return Math.min(3, (this.potentialParentLevel() ?? 0) + 1);
+    }
+    return item.level;
+  }
+
   dropChecklistItem(event: CdkDragDrop<CheckListItem[]>): void {
     const checkListItems = this.editedNote().checkListItems;
     if (!checkListItems) return;
@@ -324,14 +358,85 @@ export class NoteModalComponent implements OnInit {
     const currentItems = [...checkListItems];
 
     if (event.previousIndex !== event.currentIndex) {
+      // Move the item in the array
       moveItemInArray(currentItems, event.previousIndex, event.currentIndex);
+      
+      // Fix indentation levels after drag and drop
+      this.fixIndentationLevels(currentItems);
+      
       this.editedNote.set({
         ...this.editedNote(),
         checkListItems: currentItems
       });
     }
+    
+    // Reset drag tracking
+    this.draggedItemId.set(null);
+    this.potentialParentLevel.set(null);
   }
 
+  /**
+   * Fix indentation levels after drag and drop
+   * This ensures that items have the correct indentation based on their position
+   */
+  fixIndentationLevels(items: CheckListItem[]): void {
+    for (let i = 0; i < items.length; i++) {
+      // Find the parent item (the closest item above with a lower level)
+      if (i > 0) {
+        const currentItem = items[i];
+        const prevItem = items[i - 1];
+        
+        // If the previous item is a parent (has lower level)
+        if (prevItem.level < currentItem.level) {
+          // Keep the current indentation (it's already correct)
+          continue;
+        }
+        
+        // If the previous item is at the same level, ensure this item matches
+        if (prevItem.level === currentItem.level) {
+          // Keep the current indentation (it's already correct)
+          continue;
+        }
+        
+        // If the previous item is more indented, this item should match the last parent's level
+        if (prevItem.level > currentItem.level) {
+          // Keep the current indentation (it's already correct)
+          continue;
+        }
+        
+        // Find the appropriate parent level
+        let parentLevel = 0; // Default to top level
+        
+        // Look for the closest parent item
+        for (let j = i - 1; j >= 0; j--) {
+          if (items[j].level < currentItem.level) {
+            parentLevel = items[j].level;
+            break;
+          }
+        }
+        
+        // Set the item's level to be one more than its parent
+        // but not more than the maximum allowed level (3)
+        const newLevel = Math.min(3, parentLevel + 1);
+        
+        // Only update if the level needs to change
+        if (newLevel !== currentItem.level) {
+          items[i] = {
+            ...currentItem,
+            level: newLevel
+          };
+        }
+      } else {
+        // First item should always be at level 0
+        if (items[i].level !== 0) {
+          items[i] = {
+            ...items[i],
+            level: 0
+          };
+        }
+      }
+    }
+  }
 
   handleItemFocus(): void {
     this.isDragDisabled.set(true);

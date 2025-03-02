@@ -134,12 +134,23 @@
 
 .checklist-item-row {
   margin-bottom: -5px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .checklist-item-content {
   display: flex;
   align-items: center;
   padding: 0;
+  transition: margin-left 0.2s ease;
+  border-radius: 4px;
+}
+
+.checklist-item-content.potential-drop-target {
+  background-color: rgba(138, 180, 248, 0.05);
+}
+
+.is-dragging {
+  z-index: 10;
 }
 
 .drag-handle {
@@ -338,10 +349,20 @@
               0 8px 10px 1px rgba(0, 0, 0, 0.14),
               0 3px 14px 2px rgba(0, 0, 0, 0.12);
   background-color: #2d2e31;
+  opacity: 0.9;
+}
+
+.cdk-drag-preview .checklist-item-content {
+  padding: 8px;
+  background-color: rgba(138, 180, 248, 0.1);
+  border: 1px dashed #8ab4f8;
 }
 
 .cdk-drag-placeholder {
   opacity: 0.3;
+  background-color: rgba(138, 180, 248, 0.1);
+  border: 1px dashed #8ab4f8;
+  border-radius: 4px;
 }
 
 .cdk-drag-animating {
